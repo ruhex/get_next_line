@@ -81,11 +81,8 @@ int main (int a, char **c)
 		return (-1);
 	}
 
-	get_next_line(fd, &line);
-	printf("%s\n", line);
-
-	get_next_line(fd, &line);
-	printf("%s\n", line);
+	while (get_next_line(fd, &line))
+		printf("%s\n", line);
 
 	close(fd);
 	system("leaks a.out");	
