@@ -14,11 +14,11 @@
 
 static char *end;
 
-static t_fd	*ft_create_fd(const *str, const fd)
+static t_fd	*ft_create_fd(char *str, const int fd)
 {
 	t_fd *tmp;
 
-	if (!str || !fd)
+	if (!fd)
 		return (NULL);
 	if (!(tmp = (t_fd *)malloc(sizeof(t_fd))))
 		return (NULL);
@@ -43,7 +43,7 @@ void		ft_fd_list_push(t_fd **list, t_fd *new)
 		*list = new;
 }
 
-ft_fd		*ft_fd_list_find(t_fd **list, const fd)
+t_fd		*ft_fd_list_find(t_fd **list, const int fd)
 {
 	t_fd *tmp;
 
@@ -70,7 +70,7 @@ static int ft_get_line(t_fd *tmp, char **line)
 
         flag = 1;
         if (tmp->str)
-                *line = ft_strdup(tm--str);
+                *line = ft_strdup(tmp->str);
         else
                 *line = ft_strnew(0);
         nbytes = sizeof(buf);
@@ -98,7 +98,14 @@ int get_next_line(const int fd, char **line)
 	if (!fd || !line)
 		return (-1);
 	if (!(list))
-		list = ft_fd_list_push(list, NULL, fd);
+		list = ft_create_fd(NULL, fd);
 	tmp = list;
-	
+	while (tmp->fd != fd)
+	{
+		if (!(tmp->next))
+			tmp->next = ft_create_fd(NULL, fd);
+		tmp = tmp->next;
+	}
+
+	return (ft_get_line(tmp, line));
 }
